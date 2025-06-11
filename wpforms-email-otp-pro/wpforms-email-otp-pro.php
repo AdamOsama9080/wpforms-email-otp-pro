@@ -2,9 +2,9 @@
 /**
  * Plugin Name: WPForms Email OTP Pro
  * Description: Professional email OTP verification for WPForms with advanced settings and email templates.
- * Version: 2.0.6
+ * Version: 2.0.7
  * Author: Adam Osama
- * Author URI: https://example.com
+ * Author URI: adamosama9080@outlook.com
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
@@ -49,8 +49,8 @@ add_action('plugins_loaded', function() {
     new WPForms_Email_OTP_Pro\Form_Handler();
 
     // Enqueue admin scripts
-    add_action('admin_enqueue_scripts', function($hook) {
-        if ($hook !== 'toplevel_page_wpforms-email-otp-pro') {
+    add_action('admin_enqueue_scripts', function($args) {
+        if ($args !== 'toplevel_page_wpforms-email-otp-pro') {
             return;
         }
         wp_enqueue_script(
@@ -75,3 +75,11 @@ add_filter('plugin_action_links_' . WPFORMS_EMAIL_OTP_PRO_BASENAME, function($li
     array_unshift($links, $settings_link);
     return $links;
 });
+
+// Add documentation link beside version on plugins page
+add_filter('plugin_row_meta', function($links, $file) {
+    if ($file === WPFORMS_EMAIL_OTP_PRO_BASENAME) {
+        $links[] = '<a href="' . esc_url(WPFORMS_EMAIL_OTP_PRO_URL . 'docs/index.html') . '" target="_blank">' . __('Documentation', 'wpforms-email-otp-pro') . '</a>';
+    }
+    return $links;
+}, 10, 2);
