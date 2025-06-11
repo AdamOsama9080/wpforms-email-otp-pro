@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WPForms Email OTP Pro
  * Description: Professional email OTP verification for WPForms with advanced settings and email templates.
- * Version: 2.0.5
+ * Version: 2.0.6
  * Author: Adam Osama
  * Author URI: https://example.com
  * License: GPL-2.0+
