@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WPForms Email OTP Pro Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+        }
+        h2 {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-left: 4px solid #0073aa;
+        }
+        h3 {
+            color: #0073aa;
+        }
+        .step {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            display: inline-block;
+            background: #0073aa;
+            color: white;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .screenshot {
+            border: 1px solid #ddd;
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>WPForms Email OTP Pro Documentation</h1>
+    
+    <div class="note">
+        <strong>Note:</strong> This plugin requires WPForms to be installed and activated on your WordPress site.
+    </div>
+
+    <h2>Table of Contents</h2>
+    <ol>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#gmail-setup">Gmail App Password Setup</a></li>
+        <li><a href="#form-setup">Form Setup</a></li>
+        <li><a href="#email-templates">Custom Email Templates</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ol>
+
+    <h2 id="installation">1. Installation</h2>
+    
+    <div class="step">
+        <h3><span class="step-number">1</span> Upload the Plugin</h3>
+        <ol>
+            <li>Go to <strong>WordPress Admin → Plugins → Add New</strong></li>
+            <li>Click <strong>Upload Plugin</strong> at the top</li>
+            <li>Select the <code>wpforms-email-otp-pro.zip</code> file</li>
+            <li>Click <strong>Install Now</strong></li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">2</span> Activate the Plugin</h3>
+        <p>After installation is complete, click <strong>Activate Plugin</strong>.</p>
+    </div>
+
+    <h2 id="configuration">2. Configuration</h2>
+    
+    <div class="step">
+        <h3><span class="step-number">1</span> Access Plugin Settings</h3>
+        <p>Navigate to <strong>WPForms → Settings → Email OTP</strong> tab.</p>
+        <img src="screenshots/settings-tab.png" alt="Settings Tab" class="screenshot">
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">2</span> Configure Basic Settings</h3>
+        <ol>
+            <li><strong>Enable SMTP</strong>: Turn this on to use Gmail for sending OTP emails</li>
+            <li><strong>Sender Email</strong>: Enter your Gmail address (e.g., yourname@gmail.com)</li>
+            <li><strong>App Password</strong>: Enter your Gmail App Password (see <a href="#gmail-setup">Gmail Setup</a>)</li>
+        </ol>
+        <img src="screenshots/basic-settings.png" alt="Basic Settings" class="screenshot">
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">3</span> Form Configuration</h3>
+        <ol>
+            <li><strong>WPForms Form ID</strong>: Select which form should use OTP verification</li>
+            <li><strong>Email Field Label</strong>: Enter the exact label of your email field (case sensitive)</li>
+            <li><strong>OTP Length</strong>: Choose between 4, 6, or 8 digit codes</li>
+            <li><strong>OTP Expiry</strong>: Set how many minutes the code should remain valid</li>
+        </ol>
+    </div>
+
+    <h2 id="gmail-setup">3. Gmail App Password Setup</h2>
+    
+    <div class="step">
+        <h3><span class="step-number">1</span> Enable 2-Step Verification</h3>
+        <ol>
+            <li>Go to your <a href="https://myaccount.google.com/" target="_blank">Google Account</a></li>
+            <li>Navigate to <strong>Security → 2-Step Verification</strong></li>
+            <li>Follow the steps to enable 2-Step Verification</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">2</span> Generate App Password</h3>
+        <ol>
+            <li>In your Google Account, go to <strong>Security → App Passwords</strong></li>
+            <li>Select <strong>Mail</strong> as the app</li>
+            <li>Select <strong>Other (Custom name)</strong> and enter "WPForms OTP"</li>
+            <li>Click <strong>Generate</strong></li>
+            <li>Copy the 16-character password that appears</li>
+        </ol>
+        <div class="warning">
+            <strong>Important:</strong> This password will only be shown once. Store it securely.
+        </div>
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">3</span> Enter App Password in Plugin</h3>
+        <p>Paste the generated password in the <strong>App Password</strong> field in the plugin settings.</p>
+    </div>
+
+    <h2 id="form-setup">4. Form Setup</h2>
+    
+    <div class="step">
+        <h3><span class="step-number">1</span> Create/Edit Your Form</h3>
+        <p>Ensure your form has an email field with the exact label you specified in settings.</p>
+        <img src="screenshots/email-field.png" alt="Email Field" class="screenshot">
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">2</span> How It Works for Users</h3>
+        <ol>
+            <li>User enters their email address</li>
+            <li>Clicks "Send OTP" button</li>
+            <li>Receives email with verification code</li>
+            <li>Enters code in the form</li>
+            <li>Clicks "Verify OTP"</li>
+            <li>If correct, the form submit button is enabled</li>
+        </ol>
+        <img src="screenshots/frontend-flow.gif" alt="Frontend Flow" class="screenshot">
+    </div>
+
+    <h2 id="email-templates">5. Custom Email Templates</h2>
+    
+    <div class="step">
+        <h3><span class="step-number">1</span> Create an Elementor Template</h3>
+        <ol>
+            <li>Go to <strong>Templates → Saved Templates</strong></li>
+            <li>Click <strong>Add New</strong> and select "Email"</li>
+            <li>Design your template using Elementor</li>
+            <li>Use these placeholders where needed:
+                <ul>
+                    <li><code>{otp}</code> - The verification code</li>
+                    <li><code>{site}</code> - Your website name</li>
+                    <li><code>{email}</code> - Recipient's email address</li>
+                </ul>
+            </li>
+            <li>Save the template</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">2</span> Assign Template in Plugin</h3>
+        <ol>
+            <li>Note the template ID (visible in URL or template list)</li>
+            <li>Go to <strong>WPForms → Settings → Email OTP</strong></li>
+            <li>Enter the template ID in the "Elementor Template ID" field</li>
+            <li>Save changes</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3><span class="step-number">3</span> Sample Template Code</h3>
+        <p>Here's a basic template structure you can use as a starting point:</p>
+        <pre><code>&lt;div class="otp-email-template"&gt;
+    &lt;div class="header" style="text-align: center; padding: 20px 0; background-color: #f8f8f8;"&gt;
+        &lt;h1 style="color: #333;"&gt;{site}&lt;/h1&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="content" style="padding: 30px 20px;"&gt;
+        &lt;h2 style="color: #444;"&gt;Your Verification Code&lt;/h2&gt;
+        &lt;p style="color: #666; font-size: 16px;"&gt;Hello,&lt;/p&gt;
+        &lt;p style="color: #666; font-size: 16px;"&gt;Here is your one-time verification code:&lt;/p&gt;
+        
+        &lt;div class="otp-code" style="
+            background: #0073aa;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            letter-spacing: 3px;
+        "&gt;
+            {otp}
+        &lt;/div&gt;
+        
+        &lt;p style="color: #666; font-size: 16px;"&gt;
+            This code will expire in 5 minutes. If you didn't request this code, 
+            please ignore this email.
+        &lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="footer" style="
+        text-align: center;
+        padding: 20px;
+        background-color: #f8f8f8;
+        font-size: 14px;
+        color: #999;
+    "&gt;
+        &lt;p&gt;&amp;copy; 2023 {site}. All rights reserved.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <h2 id="troubleshooting">6. Troubleshooting</h2>
+    
+    <div class="step">
+        <h3>Emails Not Sending</h3>
+        <ul>
+            <li>Verify your Gmail App Password is correct</li>
+            <li>Check that 2-Step Verification is enabled in your Google Account</li>
+            <li>Test with a different SMTP plugin to isolate the issue</li>
+        </ul>
+    </div>
+    
+    <div class="step">
+        <h3>OTP Verification Not Working</h3>
+        <ul>
+            <li>Ensure the email field label matches exactly (case sensitive)</li>
+            <li>Check that the correct form is selected in settings</li>
+            <li>Verify your server's time is synchronized correctly</li>
+        </ul>
+    </div>
+    
+    <div class="step">
+        <h3>Elementor Template Not Loading</h3>
+        <ul>
+            <li>Ensure Elementor is installed and activated</li>
+            <li>Verify the template ID is correct</li>
+            <li>Check that the template type is "Email"</li>
+        </ul>
+    </div>
+
+    <div class="note">
+        <strong>Support:</strong> For additional help, please contact our support team at support@yourdomain.com
+    </div>
+</body>
+</html>
