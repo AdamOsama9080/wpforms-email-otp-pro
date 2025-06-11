@@ -50,13 +50,21 @@ class OTP_Handler {
 
     public function validate_otp($fields, $entry, $form_data) {
         $settings = get_option('wpforms_email_otp_pro_settings');
-        $form_id = $settings['form_id'] ?? 0;
+        $form_ids = !empty($settings['forms']) ? array_column($settings['forms'], 'form_id') : [];
         
-        if ($form_data['id'] != $form_id) {
+        if (!in_array($form_data['id'], $form_ids)) {
             return $fields;
         }
 
-        $email_field_label = $settings['email_label'] ?? 'Email';
+        // Find the email field label for this form
+        $email_field_label = 'Email';
+        foreach ($settings['forms'] as $form_config) {
+            if ($form_config['form_id'] == $form_data['id']) {
+                $email_field_label = $form_config['email_label'];
+                break;
+            }
+        }
+
         $email = '';
         
         // Find the email field by label

@@ -1,79 +1,97 @@
 jQuery(function($) {
-    // Disable submit buttons on forms with OTP
-    $('form.wpforms-form').each(function() {
-        $(this).find('button[type="submit"]').prop('disabled', true);
-    });
+    var wpformsOtp = {
+        init: function() {
+            $(document).on('click', '.wpforms-otp-btn.send-otp-btn', this.sendOtp);
+            $(document).on('click', '.wpforms-otp-btn.check-otp-btn', this.checkOtp);
+        },
 
-    // Send OTP
-    $(document).on('click', '.send-otp-btn', function() {
-        const $btn = $(this);
-        const $form = $btn.closest('form');
-        const email = $form.find('input[type="email"]').val();
+        sendOtp: function(e) {
+            e.preventDefault();
+            var $btn = $(this),
+                $container = $btn.closest('.wpforms-field-otp'),
+                $form = $container.closest('form.wpforms-form'),
+                $emailField = $form.find('.wpforms-field-email input[type="email"]'),
+                email = $emailField.val();
 
-        if (!email) {
-            alert(wpformsOtpPro.i18n.invalid_email);
-            return;
-        }
-
-        $btn.prop('disabled', true).text(wpformsOtpPro.i18n.sending);
-
-        $.post(wpformsOtpPro.ajaxurl, {
-            action: 'send_wpforms_otp',
-            email: email,
-            nonce: wpformsOtpPro.nonce
-        })
-        .done(function(response) {
-            if (response.success) {
-                alert(wpformsOtpPro.i18n.otp_sent);
-                $form.find('.wpforms-otp-field').show();
-            } else {
-                alert(response.data.message || wpformsOtpPro.i18n.failed);
+            if (!email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+                $container.find('.wpforms-otp-status').text(wpformsOtpPro.i18n.invalid_email).css('color', 'red');
+                return;
             }
-        })
-        .fail(function() {
-            alert(wpformsOtpPro.i18n.network_error);
-        })
-        .always(function() {
-            $btn.prop('disabled', false).text(wpformsOtpPro.i18n.send_otp);
-        });
-    });
 
-    // Check OTP
-    $(document).on('click', '.check-otp-btn', function() {
-        const $btn = $(this);
-        const $form = $btn.closest('form');
-        const email = $form.find('input[type="email"]').val();
-        const otp = $form.find('.wpforms-otp-input').val();
+            $btn.prop('disabled', true).text(wpformsOtpPro.i18n.sending);
 
-        if (!otp) {
-            alert(wpformsOtpPro.i18n.invalid_otp);
-            return;
-        }
+            $.ajax({
+                url: wpformsOtpPro.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'send_wpforms_otp',
+                    email: email,
+                    nonce: wpformsOtpPro.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $container.find('.wpforms-otp-status').text(response.data.message).css('color', 'green');
+                        $container.find('.wpforms-otp-field').show();
+                        $btn.hide();
+                    } else {
+                        $container.find('.wpforms-otp-status').text(response.data.message).css('color', 'red');
+                    }
+                },
+                error: function() {
+                    $container.find('.wpforms-otp-status').text(wpformsOtpPro.i18n.network_error).css('color', 'red');
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).text(wpformsOtpPro.i18n.send_otp);
+                }
+            });
+        },
 
-        $btn.prop('disabled', true).text(wpformsOtpPro.i18n.checking);
+        checkOtp: function(e) {
+            e.preventDefault();
+            var $btn = $(this),
+                $container = $btn.closest('.wpforms-field-otp'),
+                $form = $container.closest('form.wpforms-form'),
+                $otpInput = $container.find('.wpforms-otp-input'),
+                $emailField = $form.find('.wpforms-field-email input[type="email"]'),
+                email = $emailField.val(),
+                otp = $otpInput.val();
 
-        $.post(wpformsOtpPro.ajaxurl, {
-            action: 'check_wpforms_otp',
-            email: email,
-            otp: otp,
-            nonce: wpformsOtpPro.nonce
-        })
-        .done(function(response) {
-            const $status = $form.find('.wpforms-otp-status');
-            $status.removeClass('error success').empty();
-
-            if (response.success) {
-                $status.addClass('success').text(wpformsOtpPro.i18n.verified);
-                $form.find('.wpforms-otp-field').hide();
-                $form.find('button[type="submit"]').prop('disabled', false);
-            } else {
-                $status.addClass('error').text(response.data.message || wpformsOtpPro.i18n.invalid);
-                $btn.prop('disabled', false).text(wpformsOtpPro.i18n.verify);
+            if (!otp) {
+                $container.find('.wpforms-otp-status').text(wpformsOtpPro.i18n.invalid_otp).css('color', 'red');
+                return;
             }
-        })
-        .fail(function() {
-            alert(wpformsOtpPro.i18n.network_error);
-            $btn.prop('disabled', false).text(wpformsOtpPro.i18n.verify);
-        });
-    });
+
+            $btn.prop('disabled', true).text(wpformsOtpPro.i18n.checking);
+
+            $.ajax({
+                url: wpformsOtpPro.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'check_wpforms_otp',
+                    email: email,
+                    otp: otp,
+                    nonce: wpformsOtpPro.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $container.find('.wpforms-otp-status').text(response.data.message).css('color', 'green');
+                        $container.find('.wpforms-otp-hidden').val(otp); // Store OTP
+                        $form.find('.wpforms-submit').prop('disabled', false);
+                        // Remove OTP field and Send OTP button
+                        $container.remove();
+                    } else {
+                        $container.find('.wpforms-otp-status').text(response.data.message).css('color', 'red');
+                    }
+                },
+                error: function() {
+                    $container.find('.wpforms-otp-status').text(wpformsOtpPro.i18n.network_error).css('color', 'red');
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).text(wpformsOtpPro.i18n.verify);
+                }
+            });
+        }
+    };
+
+    wpformsOtp.init();
 });

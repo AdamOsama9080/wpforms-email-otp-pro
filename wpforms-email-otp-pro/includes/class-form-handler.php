@@ -49,9 +49,9 @@ class Form_Handler {
 
     public function modify_form_data($form_data, $form = null) {
         $settings = get_option('wpforms_email_otp_pro_settings');
-        $form_id = $settings['form_id'] ?? 0;
+        $form_ids = !empty($settings['forms']) ? array_column($settings['forms'], 'form_id') : [];
         
-        if ($form_data['id'] != $form_id) {
+        if (!in_array($form_data['id'], $form_ids)) {
             return $form_data;
         }
 
@@ -78,6 +78,7 @@ class Form_Handler {
                     <?php _e('Verify OTP', 'wpforms-email-otp-pro'); ?>
                 </button>
                 <div class="wpforms-otp-status"></div>
+                <input type="hidden" name="wpforms[otp]" class="wpforms-otp-hidden" value="">
             </div>
         </div>
         <?php
